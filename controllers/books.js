@@ -1,7 +1,11 @@
 import express from "express";
+import sequelize from "../config/sequelize.js";
 
-export const get = (request, response) => {
+export const get = async (request, response) => {
+  const bookList = await sequelize.models.Books.findAll();
+
   response.json({
+    data: bookList,
     message: "Books data are on the way!",
   });
 };
@@ -12,19 +16,15 @@ export const get = (request, response) => {
  * @param {express.Response} response
  */
 export const post = (request, response) => {
-  // Dynamic Path http://localhost/books/9
-  const { id } = request.params;
+  const { id, name, release_year } = request.body;
 
-  // Url Query http://localhost/books?name=Mockingbird
-  const { name } = request.query;
-
-  // Body Process
-  const { full_name, partner } = request.body;
-
-  response.json({
+  sequelize.models.Books.create({
     id,
     name,
-    full_name,
-    partner,
+    release_year,
+  });
+
+  response.json({
+    message: "Data created successfully",
   });
 };
