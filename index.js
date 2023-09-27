@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import booksRouter from "./routes/books.js";
 import { startSequelize } from "./utils/startSequelize.js";
 import sequelize from "./config/sequelize.js";
-import Books from "./models/books.js";
+import authorsRouter from "./routes/authors.js";
+import genresRouter from "./routes/genres.js";
 
 dotenv.config();
 
@@ -12,9 +13,6 @@ const server = express();
 const port = 3000;
 
 startSequelize();
-
-// Mendefinisikan sebuah models yang akan menjadi table
-sequelize.define("Books", Books);
 
 // Untuk mensinkronisasikan models dengan table di database
 sequelize.sync({ alter: true });
@@ -26,6 +24,8 @@ server.use(bodyParser.raw());
 server.use(bodyParser.json());
 
 server.use("/books", booksRouter);
+server.use("/authors", authorsRouter);
+server.use("/genres", genresRouter);
 
 server.use((error, request, response, next) => {
   response.status(500).json({

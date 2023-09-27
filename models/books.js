@@ -1,14 +1,21 @@
 import { DataTypes } from "sequelize";
+import sequelize from "../config/sequelize.js";
+import Authors from "./authors.js";
+import Publishers from "./publishers.js";
 
-const Books = {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
+const Books = sequelize.define("Books", {
+  title: DataTypes.STRING,
+  releaseYear: DataTypes.DATE,
+});
+
+Authors.hasMany(Books, {
+  foreignKey: {
     allowNull: false,
-    autoIncrement: true,
   },
-  name: DataTypes.STRING,
-  release_year: DataTypes.DATE,
-};
+});
+Publishers.hasMany(Books);
+
+Books.belongsTo(Authors);
+Books.belongsTo(Publishers);
 
 export default Books;
